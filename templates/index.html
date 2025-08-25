@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEKA ESTL - Análisis de Datos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header class="header">
+        <h1>WEKA ESTL</h1>
+        <p>Plataforma de Análisis de Datos</p>
+    </header>
+    <main class="container">
+        <section class="upload-section">
+            <h2>Subir Archivo CSV</h2>
+            <form action="/" method="post" enctype="multipart/form-data" class="upload-form">
+                <div class="form-group">
+                    <label for="archivo">Selecciona un archivo CSV</label>
+                    <input type="file" name="archivo" id="archivo" accept=".csv" required>
+                    <label>Selecciona el algoritmo</label>
+                    <input type="radio" name="opcion" value="id3" required> ID3
+                    <br>
+                    <input type="radio" name="opcion" value="knn" required> K-NN
+                    <br>
+                    <label for="validacion">Número de pliegues para validación cruzada</label>
+                    <input type="number" name="validacion" id="validacion" value="10" min="2" required>
+                </div>
+                <button type="submit" class="submit-btn">Subir Archivo</button>
+            </form>
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+            {% if results %}
+                <h3>Resultados del Análisis {{ algorithm_name }} para {{ filename }}</h3>
+                <div class="results">
+                    <p><strong>Accuracy:</strong> {{ results.accuracy }}</p>
+                    <h4>Matriz de Confusión</h4>
+                    <img src="{{ url_for('serve_image', filename=results.confusion_matrix_img) }}" alt="Matriz de Confusión">
+                    {% if algorithm_name == "ID3" %}
+                        <h4>Árbol de Decisión</h4>
+                        <img src="{{ url_for('serve_image', filename=results.tree_img) }}" alt="Árbol de Decisión">
+                    {% elif algorithm_name == "K-NN" %}
+                        <h4>Gráfico K-NN</h4>
+                        <img src="{{ url_for('serve_image', filename=results.knn_img) }}" alt="Gráfico K-NN">
+                    {% endif %}
+                    <h4>Validación Cruzada ({{ cv_folds }}-fold)</h4>
+                    <p><strong>Scores por fold:</strong> {{ results.cv_scores }}</p>
+                    <p><strong>Accuracy promedio:</strong> {{ results.cv_mean }}</p>
+                    <p><strong>Desviación estándar:</strong> {{ results.cv_std }}</p>
+                    <h4>Predicción de Ejemplo</h4>
+                    <p><strong>Ejemplo:</strong> {{ results.example_input }}</p>
+                    <p><strong>Predicción:</strong> {{ results.example_prediction }}</p>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+    <footer class="footer">
+        <p>&copy; 2025 WEKA ESTL. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
