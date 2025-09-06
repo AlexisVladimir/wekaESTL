@@ -11,11 +11,13 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 def run_id3_analysis(filepath, cv_folds=10):
     # Cargar el CSV
     try:
-        df = pd.read_csv(filepath)
-        if 'species' not in df.columns:
-            raise ValueError("El archivo CSV debe contener una columna 'species'.")
-        X = df.drop(columns=["species"])
-        y = df["species"]
+        df = pd.read_csv(filepath, sep=';')
+        if 'G3' not in df.columns:
+            raise ValueError("El archivo CSV debe contener una columna 'G3'.")
+        df['target'] = np.where(df['G3'] >= 10, 'pass', 'fail')
+        X = df.drop(columns=["G3", "target"])
+        X = pd.get_dummies(X)
+        y = df["target"]
     except Exception as e:
         raise ValueError(f"Error al cargar el CSV: {str(e)}")
 
@@ -41,7 +43,7 @@ def run_id3_analysis(filepath, cv_folds=10):
     plt.ylabel("Actual")
     plt.title("Matriz de Confusión ID3")
     plt.tight_layout()
-    plt.savefig(os.path.join('Uploads', confusion_matrix_img))
+    plt.savefig(os.path.join('uploads', confusion_matrix_img))
     plt.close()
 
     # Guardar visualización del árbol como imagen
@@ -53,7 +55,7 @@ def run_id3_analysis(filepath, cv_folds=10):
               filled=True, rounded=True, fontsize=10)
     plt.title("Árbol de Decisión (ID3)")
     plt.tight_layout()
-    plt.savefig(os.path.join('Uploads', tree_img))
+    plt.savefig(os.path.join('uploads', tree_img))
     plt.close()
 
     # Validación cruzada
@@ -62,11 +64,11 @@ def run_id3_analysis(filepath, cv_folds=10):
 
     # Guardar el modelo
     model_filename = f"modelo_id3_{os.path.basename(filepath)}.joblib"
-    joblib.dump(id3, os.path.join('Uploads', model_filename))
+    joblib.dump(id3, os.path.join('uploads', model_filename))
 
     # Probar con un nuevo ejemplo (usar valores promedio de las características)
     example_input = np.array([X.mean().values]).reshape(1, -1)
-    modelo_cargado = joblib.load(os.path.join('Uploads', model_filename))
+    modelo_cargado = joblib.load(os.path.join('uploads', model_filename))
     prediccion = modelo_cargado.predict(example_input)[0]
 
     # Retornar resultados

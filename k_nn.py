@@ -11,11 +11,13 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 def run_knn_analysis(filepath, cv_folds=10):
     # Cargar el CSV
     try:
-        df = pd.read_csv(filepath)
-        if 'species' not in df.columns:
-            raise ValueError("El archivo CSV debe contener una columna 'species'.")
-        X = df.drop(columns=["species"])
-        y = df["species"]
+        df = pd.read_csv(filepath, sep=';')
+        if 'G3' not in df.columns:
+            raise ValueError("El archivo CSV debe contener una columna 'G3'.")
+        df['target'] = np.where(df['G3'] >= 10, 'pass', 'fail')
+        X = df.drop(columns=["G3", "target"])
+        X = pd.get_dummies(X)
+        y = df["target"]
     except Exception as e:
         raise ValueError(f"Error al cargar el CSV: {str(e)}")
 
@@ -41,31 +43,31 @@ def run_knn_analysis(filepath, cv_folds=10):
     plt.ylabel("Actual")
     plt.title("Matriz de Confusión K-NN")
     plt.tight_layout()
-    plt.savefig(os.path.join('Uploads', confusion_matrix_img))
+    plt.savefig(os.path.join('uploads', confusion_matrix_img))
     plt.close()
 
-    # Guardar visualización del espacio 2D (petal length vs petal width)
+    # Guardar visualización del espacio 2D (studTime vs absences)
     knn_img = f"knn_plot_{os.path.basename(filepath)}.png"
-    feature_x = "petal length (cm)"
-    feature_y = "petal width (cm)"
+    feature_x = "studytime"
+    feature_y = "absences"
     X_vis = df[[feature_x, feature_y]].values
-    y_vis = df["species"].values
+    y_vis = df["target"].values
     knn_vis = KNeighborsClassifier(n_neighbors=5)
     knn_vis.fit(X_vis, y_vis)
-    nuevo_vis = np.array([[4.5, 1.5]])  # Ejemplo con 2 características
+    nuevo_vis = np.array([[2, 5]])  # Ejemplo con 2 características
     distancias, indices = knn_vis.kneighbors(nuevo_vis)
     
     plt.figure(figsize=(8, 6))
-    sns.scatterplot(x=feature_x, y=feature_y, hue="species", data=df, palette="Set2", s=60)
+    sns.scatterplot(x=feature_x, y=feature_y, hue="target", data=df, palette="Set2", s=60)
     plt.scatter(nuevo_vis[0][0], nuevo_vis[0][1], color='red', label='Nuevo ejemplo', s=100, edgecolor='black', marker='X')
     for idx in indices[0]:
         vecino = X_vis[idx]
         plt.plot([nuevo_vis[0][0], vecino[0]], [nuevo_vis[0][1], vecino[1]], 'k--', linewidth=0.8)
-    plt.title("K-NN en espacio 2D (petal length vs petal width)")
+    plt.title("K-NN en espacio 2D (studytime vs absences)")
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(os.path.join('Uploads', knn_img))
+    plt.savefig(os.path.join('uploads', knn_img))
     plt.close()
 
     # Validación cruzada
@@ -74,11 +76,11 @@ def run_knn_analysis(filepath, cv_folds=10):
 
     # Guardar el modelo
     model_filename = f"modelo_knn_{os.path.basename(filepath)}.joblib"
-    joblib.dump(knn, os.path.join('Uploads', model_filename))
+    joblib.dump(knn, os.path.join('uploads', model_filename))
 
     # Probar con un nuevo ejemplo (usar valores promedio de las características)
     example_input = np.array([X.mean().values]).reshape(1, -1)
-    modelo_cargado = joblib.load(os.path.join('Uploads', model_filename))
+    modelo_cargado = joblib.load(os.path.join('uploads', model_filename))
     prediccion = modelo_cargado.predict(example_input)[0]
 
     # Retornar resultados

@@ -85,7 +85,8 @@ body {
 .form-group input[type="file"]::-webkit-file-upload-button:hover {
     background-color: #3b82c4;
 }
-.form-group input[type="number"]{
+
+.form-group input[type="number"] {
     padding: 0.5rem;
     font-size: 1rem;
     border: 2px solid #4da8da;
@@ -94,9 +95,6 @@ body {
     color: #0a1428;
     cursor: pointer;
 }
-
-
-
 
 .submit-btn {
     background-color: #4da8da;
@@ -153,6 +151,41 @@ body {
     font-size: 0.9rem;
 }
 
+#columnsDisplay {
+    background-color: #2a3d57;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem;
+}
+
+#columnsDisplay h4 {
+    margin: 0 0 0.5rem 0;
+    color: #4da8da;
+}
+
+.columns-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.columns-table th,
+.columns-table td {
+    border: 1px solid #4da8da;
+    padding: 0.5rem;
+    text-align: left;
+    color: #a0c4ff;
+}
+
+.columns-table th {
+    background-color: #0a1428;
+    font-weight: bold;
+}
+
+.columns-table td {
+    background-color: #1a252f;
+}
+
 @media (max-width: 600px) {
     .header h1 {
         font-size: 2rem;
@@ -168,5 +201,9 @@ body {
 
     .container {
         max-width: 100%;
+    }
+
+    .columns-table {
+        font-size: 0.9rem;
     }
 }

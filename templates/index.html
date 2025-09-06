@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEKA ESTL - Análisis de Datos</title>
+    <title>WEKA ESTL</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -11,23 +11,32 @@
         <h1>WEKA ESTL</h1>
         <p>Plataforma de Análisis de Datos</p>
     </header>
-    <main class="container">
+
+    <div class="container">
         <section class="upload-section">
             <h2>Subir Archivo CSV</h2>
-            <form action="/" method="post" enctype="multipart/form-data" class="upload-form">
+            <form id="uploadForm" class="upload-form" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="archivo">Selecciona un archivo CSV</label>
-                    <input type="file" name="archivo" id="archivo" accept=".csv" required>
+                    <input type="file" id="archivo" name="archivo" accept=".csv" required>
+                </div>
+                <div id="columnsDisplay">
+                    <!-- Aquí se mostrarán las columnas -->
+                </div>
+                <div class="form-group">
                     <label>Selecciona el algoritmo</label>
-                    <input type="radio" name="opcion" value="id3" required> ID3
-                    <br>
-                    <input type="radio" name="opcion" value="knn" required> K-NN
-                    <br>
+                    <input type="radio" id="id3" name="opcion" value="id3" required>
+                    <label for="id3">ID3</label>
+                    <input type="radio" id="knn" name="opcion" value="knn">
+                    <label for="knn">K-NN</label>
+                </div>
+                <div class="form-group">
                     <label for="validacion">Número de pliegues para validación cruzada</label>
-                    <input type="number" name="validacion" id="validacion" value="10" min="2" required>
+                    <input type="number" id="validacion" name="validacion" min="2" value="10" required>
                 </div>
                 <button type="submit" class="submit-btn">Subir Archivo</button>
             </form>
+
             {% if error %}
                 <p class="error">{{ error }}</p>
             {% endif %}
@@ -54,9 +63,12 @@
                 </div>
             {% endif %}
         </section>
-    </main>
+    </div>
+
     <footer class="footer">
         <p>&copy; 2025 WEKA ESTL. Todos los derechos reservados.</p>
     </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
