@@ -4,31 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WEKA ESTL</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <header class="header">
+    <div class="header">
         <h1>WEKA ESTL</h1>
         <p>Plataforma de Análisis de Datos</p>
-    </header>
+    </div>
 
     <div class="container">
-        <section class="upload-section">
+        <div class="upload-section">
             <h2>Subir Archivo CSV</h2>
-            <form id="uploadForm" class="upload-form" method="post" enctype="multipart/form-data">
+            <form class="upload-form" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="archivo">Selecciona un archivo CSV</label>
                     <input type="file" id="archivo" name="archivo" accept=".csv" required>
                 </div>
-                <div id="columnsDisplay">
-                    <!-- Aquí se mostrarán las columnas -->
-                </div>
+                <div id="columnsDisplay"></div>
                 <div class="form-group">
-                    <label>Selecciona el algoritmo</label>
-                    <input type="radio" id="id3" name="opcion" value="id3" required>
-                    <label for="id3">ID3</label>
-                    <input type="radio" id="knn" name="opcion" value="knn">
-                    <label for="knn">K-NN</label>
+                    <label for="opcion">Selecciona el algoritmo</label>
+                    <select name="opcion" id="opcion" required>
+                        <option value="id3">ID3</option>
+                        <option value="knn">K-NN</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="validacion">Número de pliegues para validación cruzada</label>
@@ -36,39 +34,45 @@
                 </div>
                 <button type="submit" class="submit-btn">Subir Archivo</button>
             </form>
+        </div>
 
-            {% if error %}
-                <p class="error">{{ error }}</p>
-            {% endif %}
-            {% if results %}
-                <h3>Resultados del Análisis {{ algorithm_name }} para {{ filename }}</h3>
-                <div class="results">
-                    <p><strong>Accuracy:</strong> {{ results.accuracy }}</p>
-                    <h4>Matriz de Confusión</h4>
-                    <img src="{{ url_for('serve_image', filename=results.confusion_matrix_img) }}" alt="Matriz de Confusión">
-                    {% if algorithm_name == "ID3" %}
-                        <h4>Árbol de Decisión</h4>
-                        <img src="{{ url_for('serve_image', filename=results.tree_img) }}" alt="Árbol de Decisión">
-                    {% elif algorithm_name == "K-NN" %}
-                        <h4>Gráfico K-NN</h4>
-                        <img src="{{ url_for('serve_image', filename=results.knn_img) }}" alt="Gráfico K-NN">
-                    {% endif %}
-                    <h4>Validación Cruzada ({{ cv_folds }}-fold)</h4>
-                    <p><strong>Scores por fold:</strong> {{ results.cv_scores }}</p>
-                    <p><strong>Accuracy promedio:</strong> {{ results.cv_mean }}</p>
-                    <p><strong>Desviación estándar:</strong> {{ results.cv_std }}</p>
-                    <h4>Predicción de Ejemplo</h4>
-                    <p><strong>Ejemplo:</strong> {{ results.example_input }}</p>
-                    <p><strong>Predicción:</strong> {{ results.example_prediction }}</p>
-                </div>
-            {% endif %}
-        </section>
+        {% if model_exists and filename and algorithm %}
+            <div class="predict-section" style="text-align: center; margin-top: 1rem;">
+                <a href="/predict?filename={{ filename }}&algorithm={{ algorithm }}" class="predict-btn">Ir a Predicción</a>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        {% if results %}
+            <div class="results">
+                <h2>Resultados del Análisis {{ algorithm_name }} para {{ filename }}</h2>
+                <p><strong>Accuracy:</strong> {{ results.accuracy }}</p>
+                <h3>Matriz de Confusión</h3>
+                <img src="/uploads/{{ results.confusion_matrix_img }}" alt="Matriz de Confusión">
+                {% if algorithm_name == "ID3" %}
+                    <h3>Árbol de Decisión</h3>
+                    <img src="/uploads/{{ results.tree_img }}" alt="Árbol de Decisión">
+                {% elif algorithm_name == "K-NN" %}
+                    <h3>Gráfico K-NN</h3>
+                    <img src="/uploads/{{ results.knn_img }}" alt="Gráfico K-NN">
+                {% endif %}
+                <h3>Validación Cruzada ({{ cv_folds }}-fold)</h3>
+                <p><strong>Scores por fold:</strong> {{ results.cv_scores }}</p>
+                <p><strong>Accuracy promedio:</strong> {{ results.cv_mean }}</p>
+                <p><strong>Desviación estándar:</strong> {{ results.cv_std }}</p>
+                <h3>Predicción</h3>
+                <p><strong>Hacer Predicción</strong></p>
+                <a href="/predict?filename={{ filename }}&algorithm={{ algorithm }}" class="predict-btn">Hacer Predicción con el Modelo</a>
+            </div>
+        {% endif %}
     </div>
 
-    <footer class="footer">
-        <p>&copy; 2025 WEKA ESTL. Todos los derechos reservados.</p>
-    </footer>
+    <div class="footer">
+        <p>© 2025 WEKA ESTL. Todos los derechos reservados.</p>
+    </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="/static/script.js"></script>
 </body>
 </html>

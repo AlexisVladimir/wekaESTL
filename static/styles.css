@@ -1,3 +1,4 @@
+/* styles.css */
 body {
     margin: 0;
     font-family: 'Arial', sans-serif;
@@ -96,20 +97,52 @@ body {
     cursor: pointer;
 }
 
+/* Estilo mejorado para botones de envío */
 .submit-btn {
     background-color: #4da8da;
     color: #ffffff;
     border: none;
     padding: 0.75rem 1.5rem;
     font-size: 1.1rem;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
     align-self: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .submit-btn:hover {
     background-color: #3b82c4;
+    transform: translateY(-2px);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+/* Nueva clase para botones de predicción */
+.predict-btn {
+    background-color: #28a745;
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    align-self: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.predict-btn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.predict-btn:active {
+    transform: translateY(0);
 }
 
 .footer {
@@ -163,27 +196,18 @@ body {
     color: #4da8da;
 }
 
-.columns-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
+.columns-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
-.columns-table th,
-.columns-table td {
-    border: 1px solid #4da8da;
-    padding: 0.5rem;
-    text-align: left;
-    color: #a0c4ff;
-}
-
-.columns-table th {
-    background-color: #0a1428;
-    font-weight: bold;
-}
-
-.columns-table td {
+.column-item {
     background-color: #1a252f;
+    padding: 0.5rem 1rem;
+    border: 1px solid #4da8da;
+    border-radius: 4px;
+    color: #a0c4ff;
 }
 
 @media (max-width: 600px) {
@@ -195,7 +219,7 @@ body {
         padding: 1.5rem;
     }
 
-    .submit-btn {
+    .submit-btn, .predict-btn {
         width: 100%;
     }
 
@@ -203,7 +227,7 @@ body {
         max-width: 100%;
     }
 
-    .columns-table {
-        font-size: 0.9rem;
+    .column-item {
+        flex: 1 1 auto;
     }
 }

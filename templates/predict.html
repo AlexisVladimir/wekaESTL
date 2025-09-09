@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEKA ESTL</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>WEKA ESTL</h1>
+        <p>Plataforma de Análisis de Datos</p>
+    </div>
+
+    <div class="container">
+        <div class="upload-section">
+            <form class="upload-form" id="predictionForm" method="post" enctype="multipart/form-data" action="/make_prediction">
+                <input type="hidden" name="filename" value="{{ filename }}">
+                <input type="hidden" name="algorithm" value="{{ algorithm_name }}">
+                <div class="form-group">
+                    <label for="new_csv">Subir nuevo archivo CSV para predicción</label>
+                    <input type="file" id="new_csv" name="new_csv" accept=".csv" required>
+                </div>
+                <div id="columnsDisplay">
+                    {% if columns %}
+                        <h4>Columnas del CSV:</h4>
+                        <div class="columns-row">
+                            {% for col in columns %}
+                                <span class="column-item">{{ col }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="predict-btn">Realizar Predicción</button>
+                <div id="predictionResults" class="results" style="margin-top: 1rem; display: none;">
+                    <h3>Resultados de la Predicción</h3>
+                    <pre id="predictionOutput"></pre>
+                </div>
+            </form>
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 WEKA ESTL. Todos los derechos reservados.</p>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

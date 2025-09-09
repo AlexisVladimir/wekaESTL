@@ -11,7 +11,7 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 def run_knn_analysis(filepath, cv_folds=10):
     # Cargar el CSV
     try:
-        df = pd.read_csv(filepath, sep=';')
+        df = pd.read_csv(filepath, sep=';', encoding='utf-8')
         if 'G3' not in df.columns:
             raise ValueError("El archivo CSV debe contener una columna 'G3'.")
         df['target'] = np.where(df['G3'] >= 10, 'pass', 'fail')
